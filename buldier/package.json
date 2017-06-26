@@ -1,0 +1,29 @@
+{
+  "name": "front-end_template",
+  "version": "1.0.0",
+  "description": "quick start for makeup project",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerkurevSergei/FrontendTemplate.git"
+  },
+  "keywords": [
+    "quick",
+    "start",
+    "web-project",
+    "makeup"
+  ],
+  "author": "Merkurev Sergei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MerkurevSergei/FrontendTemplate/issues"
+  },
+  "homepage": "https://github.com/MerkurevSergei/FrontendTemplate#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
+  }
+}
