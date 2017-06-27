@@ -20,7 +20,14 @@ var gulp = require('gulp'),
     //cache        = require('gulp-cache'), // Подключаем библиотеку кеширования
     //autoprefixer = require('gulp-autoprefixer');// Подключаем библиотеку для автоматического добавления префиксов
 
+/* ============================== PATH ARRAY =============================== */
 var path = {
+		lib: {
+			smerk: {
+				css:  '../library/smerk/css/',
+				sass: '../library/smerk/sass/'
+			}
+		},
         pub: {
             js: 'static/build/js',
             css: 'static/build/css',
@@ -28,27 +35,41 @@ var path = {
             img: 'static/build/img'
         },
         src: {
-			sass: '../source/sass/',
 			css:  '../source/css/',
+			sass: '../source/sass/',
             vendor_fonts: ['bower_components/**/*.{svg,woff,eot,ttf}', 'semantic/**/*.{svg,woff,eot,ttf}'],
             vendor_img: ['bower_components/**/*.{png,jpg,jpeg,gif}', 'semantic/**/*.{png,jpg,jpeg,gif}']
         }
 };
 
-gulp.task('sass', function(){
-	
-    gulp.src('./../source/sass/*.scss')
+/* =========================== DEVELOPMENT TASKS =========================== */
+gulp.task('sass-smerk', function(){
+	gulp.src(path.lib.smerk.sass+'**/*.scss')
 		.pipe(plumber())
 		.pipe(sass())
 		.pipe(cssprefixer({
-			browsers: ['last 15 versions', '> 1%', 'ie 8', 'ie 7'], 
+			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
 			cascade: true
 		}))
-		.pipe(gulp.dest('./../source/css/'));
+		.pipe(gulp.dest(path.lib.smerk.css));
 });
 
-gulp.task('watch', function() {
-	gulp.watch('./../source/sass/**/*.scss', ['sass']);
+gulp.task('sass-src', function(){
+    gulp.src(path.src.sass + 'style.scss')
+		.pipe(plumber())
+		.pipe(sass())
+		.pipe(cssprefixer({
+			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
+			cascade: true
+		}))
+		.pipe(gulp.dest(path.src.css));
+});
+
+
+gulp.task('watch-dev', function() {
+	gulp.watch(path.lib.smerk.sass + '**/*.scss', ['sass-smerk']);
+	gulp.watch(path.src.sass + 'style.scss', ['sass-src']);
+	
 });
 
 
