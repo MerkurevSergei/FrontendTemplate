@@ -6,6 +6,7 @@ var gulp = require('gulp'),
 	
 	pug 		= require('gulp-pug'),
 	sass 		= require('gulp-sass'),
+	less 		= require('gulp-less'),
 	cssprefixer = require('gulp-autoprefixer'),
 	cssminify   = require('gulp-csso'),
 	postcss		= require('gulp-postcss'),
@@ -22,12 +23,6 @@ var gulp = require('gulp'),
 
 /* ============================== PATH ARRAY =============================== */
 var path = {
-		lib: {
-			smerk: {
-				css:  '../library/smerk/css/',
-				sass: '../library/smerk/sass/'
-			}
-		},
         pub: {
             js:     '../public/js/'		,
             css:    '../public/css/'	,
@@ -40,6 +35,7 @@ var path = {
 			js:     '../source/js/'			,
 			css:  	'../source/css/'		,
 			sass: 	'../source/sass/'		,
+			less: 	'../source/less/'		,
 			img: 	'../source/img/'		,
 			presvg: '../source/img/presvg/'	,
             fonts:  '../source/fonts/'		,
@@ -48,19 +44,8 @@ var path = {
 };
 
 /* =========================== DEVELOPMENT TASKS =========================== */
-/* Сборка библиотеки компонентов БЭМ */
-gulp.task('sass-smerk', function(){
-	gulp.src(path.lib.smerk.sass+'**/*.scss')
-		.pipe(plumber())
-		.pipe(sass())
-		.pipe(cssprefixer({
-			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
-			cascade: true
-		}))
-		.pipe(gulp.dest(path.lib.smerk.css));
-});
 
-/* Сборка стилей проекта */
+/* Сборка стилей из SASS файлов */
 gulp.task('sass-src', function(){
     gulp.src(path.src.sass + 'style.scss')
 		.pipe(plumber())
@@ -76,17 +61,30 @@ gulp.task('sass-src', function(){
 		.pipe(cssminify())
 		.pipe(rename('style.min.css'))
 		.pipe(gulp.dest(path.src.css));
-	
-	gulp.src(path.src.css + 'normalize.css')
+});
+
+/* Сборка стилей из LESS файлов */
+gulp.task('less-src', function(){
+    gulp.src(path.src.less + 'style.less')
+		.pipe(plumber())
+		.pipe(less())
+		.pipe(cssprefixer({
+			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
+			cascade: true
+		}))
+		.pipe(postcss([
+			mqpacker({sort: true})
+		]))
+		.pipe(gulp.dest(path.src.css))
 		.pipe(cssminify())
-		.pipe(rename('normalize.min.css'))
+		.pipe(rename('style.min.css'))
 		.pipe(gulp.dest(path.src.css));
 });
 
 /* Сборка js для public, зацикливается */
 gulp.task('js-src', function(cb){
 	pump([
-		gulp.src(path.src.js + '*.js'),
+		gulp.src(path.src.js + 'script.js'),
 		uglify(),
 		rename({suffix: '.min'}),
 		gulp.dest(path.src.js)
@@ -108,8 +106,9 @@ gulp.task('svg-src', function(){
 
 /* Наблюдение за изменениями */
 gulp.task('watch-dev', function() {
-	gulp.watch(path.lib.smerk.sass + '**/*.scss', ['sass-src']);
-	gulp.watch(path.src.sass + '**/*.scss', ['sass-src']);
+	//gulp.watch(path.src.sass + '**/*.scss', ['sass-src']);
+	gulp.watch(path.src.less   + '**/*.less', ['less-src']);
+	gulp.watch(path.src.js     + '**/script.js', ['js-src']);
 	gulp.watch(path.src.presvg + '**/*.svg', ['svg-src']);
 	
 	
@@ -118,7 +117,7 @@ gulp.task('watch-dev', function() {
 	gulp.watch(path.src.img + '**/*.*').on("change", server.reload);
 	gulp.watch(path.src.js + '**/*.*').on("change", server.reload);
 	gulp.watch(path.src.html + '**/*.html').on("change", server.reload);
-	// gulp.watch(path.src.js + '**/*.js', ['js-src']);
+	// 
 	
 });
 
@@ -133,8 +132,8 @@ gulp.task('serv-dev', function() {
 
 /* Запуск dev проекта */
 gulp.task('build-dev', ['watch-dev', 'serv-dev']);
-/* ============================= PUBLIC TASKS ============================= */
 
+/* ============================= PUBLIC TASKS ============================= */
 /* Очистка public перед сборкой */
 gulp.task('clean-pub', function() {
 	return del('../public/',{force: true});
