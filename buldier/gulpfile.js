@@ -1,4 +1,4 @@
-var gulp = require('gulp'),
+﻿var gulp = require('gulp'),
 	rename      = require('gulp-rename'),
 	del         = require('del'),
 	plumber 	= require('gulp-plumber'),
@@ -175,7 +175,7 @@ gulp.task('svg-to-pub', function(){
 
 /* Копирование fonts в public */
 gulp.task('fonts-to-pub', function(){
-    gulp.src(path.src.fonts + '*.{woff, woff2}')
+    gulp.src(path.src.fonts + '*.*')
 		.pipe(gulp.dest(path.pub.fonts));
 });
 
