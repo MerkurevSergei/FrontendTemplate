@@ -1,45 +1,53 @@
 ﻿var gulp = require('gulp'),
-	rename      = require('gulp-rename'),
-	del         = require('del'),
-	plumber 	= require('gulp-plumber'),
-	pump 		= require('pump'),
+
+	/* Служебные */
+	del         = require('del'),		  		/* Рекурсивное удаление каталога */
+	newer 		= require('gulp-newer'),		/* Проверяет, есть ли изменившиеся файлы */
+	plumber 	= require('gulp-plumber'),		/* Заглушка для ошибок в препроцессорных файлах */
+	pump 		= require('pump'),				/* Аналог pipe */
+	rename      = require('gulp-rename'),		/* Переименование файла */
+	sequence = require('gulp-sequence'),		/* Последовательное выполнение задач */
+	server = require('browser-sync'),			/* Локальный сервер, live-reload */
 	
-	pug 		= require('gulp-pug'),
-	sass 		= require('gulp-sass'),
-	less 		= require('gulp-less'),
-	cssprefixer = require('gulp-autoprefixer'),
-	cssminify   = require('gulp-csso'),
-	postcss		= require('gulp-postcss'),
-	mqpacker	= require('css-mqpacker'),
+	/* HTML, CSS, JS */
+	pug 		= require('gulp-pug'),			/* Препроцессор HTML */
+	sass 		= require('gulp-sass'),			/* Препроцессор CSS */
+	less 		= require('gulp-less'),			/* Препроцессор CSS */		
+	cssprefixer = require('gulp-autoprefixer'), /* Префиксы при верстке */		
+	cssminify   = require('gulp-csso'),			/* Минификация CSS */
+	postcss		= require('gulp-postcss'),		/* PostCSS */		
+	mqpacker	= require('css-mqpacker'),		/* Упорядочивает медиавыражения */		
+	uglify       = require('gulp-uglify'),		/* Минификация JS */
 	
-	uglify       = require('gulp-uglify'),
-	
-	imagemin     = require('gulp-imagemin'),
-	svgstore     = require('gulp-svgstore'),
-	svgmin 	     = require('gulp-svgmin'),
-	
-	sequence = require('gulp-sequence'),
-	server = require('browser-sync');
+	/* Изображения */
+	imagemin     = require('gulp-imagemin'),	/* Минификация изображений */
+	svgstore     = require('gulp-svgstore'),	/* Сборка спрайтов из SVG */
+	svgmin 	     = require('gulp-svgmin');		/* Минификация SVG */
 
 /* ============================== PATH ARRAY =============================== */
 var path = {
         pub: {
-            js:     '../public/js/'		,
-            css:    '../public/css/'	,
-            fonts:  '../public/fonts/'	,
-			html:   '../public/'		,
-            img:	'../public/img/'
+            html:   '../public/'		,
+			css:    '../public/css/'	,
+			js:     '../public/js/'		,
+            img:	'../public/img/'	,
+			fonts:  '../source/fonts/'		
 			
+        },
+		dev: {
+			html:  	'../dev/'			,
+			css:  	'../dev/css/'		,
+			js:     '../dev/js/'			,
+			img: 	'../dev/img/'		,
+            fonts:  '../dev/fonts/'		
         },
         src: {
 			js:     '../source/js/'			,
-			css:  	'../source/css/'		,
 			sass: 	'../source/sass/'		,
 			less: 	'../source/less/'		,
 			img: 	'../source/img/'		,
 			presvg: '../source/img/presvg/'	,
-            fonts:  '../source/fonts/'		,
-			html:  	'../source/'			
+            fonts:  '../source/fonts/'		
         }
 };
 
