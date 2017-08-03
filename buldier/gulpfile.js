@@ -26,54 +26,31 @@
 
 /* ============================== PATH ARRAY =============================== */
 var path = {
+        src: {
+			all:    '../source/'			  ,
+			style:  '../source/common/style/' ,
+			script: '../source/common/script/',
+            fonts:  '../source/assets/fonts/'		
+        },
         pub: {
             html:   '../public/'		,
-			css:    '../public/css/'	,
-			js:     '../public/js/'		,
+			style:  '../public/style/'	,
+			script: '../public/script/'	,
             img:	'../public/img/'	,
-			fonts:  '../source/fonts/'		
+			fonts:  '../public/fonts/'		
 			
-        },
-		dev: {
-			html:  	'../dev/'			,
-			css:  	'../dev/css/'		,
-			js:     '../dev/js/'			,
-			img: 	'../dev/img/'		,
-            fonts:  '../dev/fonts/'		
-        },
-        src: {
-			js:     '../source/js/'			,
-			sass: 	'../source/sass/'		,
-			less: 	'../source/less/'		,
-			img: 	'../source/img/'		,
-			presvg: '../source/img/presvg/'	,
-            fonts:  '../source/fonts/'		
         }
 };
 
 /* =========================== DEVELOPMENT TASKS =========================== */
 
-/* Сборка стилей из SASS файлов */
-gulp.task('sass-src', function(){
-    gulp.src(path.src.sass + 'style.scss')
-		.pipe(plumber())
-		.pipe(sass())
-		.pipe(cssprefixer({
-			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
-			cascade: true
-		}))
-		.pipe(postcss([
-			mqpacker({sort: true})
-		]))
-		.pipe(gulp.dest(path.src.css))
-		.pipe(cssminify())
-		.pipe(rename('style.min.css'))
-		.pipe(gulp.dest(path.src.css));
+/* Сборка разметки */
+gulp.task('page', function(){
+    ;
 });
-
-/* Сборка стилей из LESS файлов */
-gulp.task('less-src', function(){
-    gulp.src(path.src.less + 'style.less')
+/* Сборка стилей LESS*/
+gulp.task('style-less', function(){
+	gulp.src(path.src.style + 'style.less')
 		.pipe(plumber())
 		.pipe(less())
 		.pipe(cssprefixer({
@@ -83,91 +60,57 @@ gulp.task('less-src', function(){
 		.pipe(postcss([
 			mqpacker({sort: true})
 		]))
-		.pipe(gulp.dest(path.src.css))
+		.pipe(gulp.dest(path.pub.style))
 		.pipe(cssminify())
 		.pipe(rename('style.min.css'))
-		.pipe(gulp.dest(path.src.css));
+		.pipe(gulp.dest(path.pub.style));
 });
 
-/* Сборка js для public, зацикливается */
-gulp.task('js-src', function(cb){
+/* Сборка стилей SCSS*/
+gulp.task('style-scss', function(){
+	gulp.src(path.src.style + 'style.scss')
+		.pipe(plumber())
+		.pipe(sass())
+		.pipe(cssprefixer({
+			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
+			cascade: true
+		}))
+		.pipe(postcss([
+			mqpacker({sort: true})
+		]))
+		.pipe(gulp.dest(path.pub.style))
+		.pipe(cssminify())
+		.pipe(rename('style.min.css'))
+		.pipe(gulp.dest(path.pub.style));
+});
+
+/* Сборка javascript */
+gulp.task('script', function(cb){
 	pump([
-		gulp.src(path.src.js + 'script.js'),
+		gulp.src(path.src.script + 'app.js'),
+		gulp.dest(path.pub.script),
 		uglify(),
 		rename({suffix: '.min'}),
-		gulp.dest(path.src.js)
+		gulp.dest(path.pub.script)
 	],
 	cb
 	);
 });
 
-/* Сборка SVG спрайта */
-gulp.task('svg-src', function(){
-    gulp.src(path.src.presvg + '*.svg')
+/* Сборка и оптимизация SVG спрайта */
+gulp.task('svg', function(){
+    gulp.src(path.src.all + '**/presvg/*.svg')
 		.pipe(svgmin())
 		.pipe(svgstore({
 			inlineSvg: true
 		}))
 		.pipe(rename("sprite.svg"))
-		.pipe(gulp.dest(path.src.img));
+		.pipe(gulp.dest(path.pub.img));
 });
-
-/* Наблюдение за изменениями */
-gulp.task('watch-dev', function() {
-	//gulp.watch(path.src.sass + '**/*.scss', ['sass-src']);
-	gulp.watch(path.src.less   + '**/*.less', ['less-src']);
-	gulp.watch(path.src.js     + '**/script.js', ['js-src']);
-	gulp.watch(path.src.presvg + '**/*.svg', ['svg-src']);
-	
-	
-	gulp.watch(path.src.css + '**/*.*').on("change", server.reload);
-	gulp.watch(path.src.fonts + '**/*.*').on("change", server.reload);
-	gulp.watch(path.src.img + '**/*.*').on("change", server.reload);
-	gulp.watch(path.src.js + '**/*.*').on("change", server.reload);
-	gulp.watch(path.src.html + '**/*.html').on("change", server.reload);
-	// 
-	
-});
-
-/* Локальный сервер */
-gulp.task('serv-dev', function() {
-    server.init({
-        server: {
-            baseDir: "../source/"
-        }
-    });
-});
-
-/* Запуск dev проекта */
-gulp.task('build-dev', ['watch-dev', 'serv-dev']);
-
-/* ============================= PUBLIC TASKS ============================= */
-/* Очистка public перед сборкой */
-gulp.task('clean-pub', function() {
-	return del('../public/',{force: true});
-});
-
-/* Копирование html в public */
-gulp.task('html-to-pub', function(){
-    gulp.src(path.src.html + '*.html')
-		.pipe(gulp.dest(path.pub.html));
-});
-
-/* Копирование стилей для public */
-gulp.task('css-to-pub', function(){
-    gulp.src(path.src.css + '*.css')
-		.pipe(gulp.dest(path.pub.css))
-});
-
-/* Копирование js для public */
-gulp.task('js-to-pub', function(cb){
-    gulp.src(path.src.js + '*.js')
-		.pipe(gulp.dest(path.pub.js))
-});
-
-/* Оптимизация изображений для public */
-gulp.task('img-to-pub', function(){
-    gulp.src(path.src.img + '**/*.{png,jpg,gif}')
+/* Оптимизация изображений */
+gulp.task('img', function(){
+    gulp.src(path.src.all + '**/*.{png,jpg,gif}')
+		.pipe(newer(path.pub.img))
 		.pipe(imagemin([
 			imagemin.optipng({optimizationLevel: 3}),
 			imagemin.jpegtran({progressive: true})
@@ -175,17 +118,39 @@ gulp.task('img-to-pub', function(){
 		.pipe(gulp.dest(path.pub.img));
 });
 
-/* Копирование svg в public */
-gulp.task('svg-to-pub', function(){
-    gulp.src(path.src.img + '*.svg')
-		.pipe(gulp.dest(path.pub.img));
+
+/* ============================= SERVICE TASKS ============================= */
+
+
+/* Наблюдение за изменениями */
+gulp.task('watcher', function() {
+	gulp.watch(path.src.all + '**/*.less', ['style-less']);
+	gulp.watch(path.src.all + '**/*.scss', ['style-scss']);
+	gulp.watch(path.src.all + '**/*.js', ['script']);
+	gulp.watch(path.src.all + '**/presvg/*.svg', ['svg']);
+	gulp.watch(path.src.all + '**/presvg/*.svg', ['svg']);
+	gulp.watch(path.src.all + '**/*.*').on("change", server.reload);	
 });
 
-/* Копирование fonts в public */
-gulp.task('fonts-to-pub', function(){
-    gulp.src(path.src.fonts + '*.*')
-		.pipe(gulp.dest(path.pub.fonts));
+/* Локальный сервер */
+gulp.task('server', function() {
+    server.init({
+        server: {
+            baseDir: "../public/"
+        }
+    });
 });
 
-/* Сборщик public проекта */
-gulp.task('build-pub', sequence('clean-pub', ['img-to-pub','css-to-pub', 'svg-to-pub', 'html-to-pub', 'js-to-pub', 'fonts-to-pub']));
+/* Очистка public перед сборкой */
+gulp.task('clean', function() {
+	return del('../public/',{force: true});
+});
+
+/* =========================== COLLECTOR PROJECT =========================== */
+gulp.task('prod', sequence('clean', ['page', 'style', 'js', 'img', 'svg', 'fonts']));
+gulp.task('dev', sequence('prod', 'server', 'watcher'));
+
+
+
+
+
