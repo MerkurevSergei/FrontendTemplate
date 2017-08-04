@@ -1,17 +1,18 @@
 ﻿var gulp = require('gulp'),
 
 	/* Служебные */
-	concat = require('gulp-concat'),			/* Склейка файлов */
+	concat      = require('gulp-concat'),		/* Склейка файлов */
 	del         = require('del'),		  		/* Рекурсивное удаление каталога */
-	flatten = require('gulp-flatten'),			/* Удаляет относительный путь у файлов */
+	flatten     = require('gulp-flatten'),		/* Удаляет относительный путь у файлов */
 	newer 		= require('gulp-newer'),		/* Проверяет, есть ли изменившиеся файлы */
 	plumber 	= require('gulp-plumber'),		/* Заглушка для ошибок в препроцессорных файлах */
 	pump 		= require('pump'),				/* Аналог pipe */
 	rename      = require('gulp-rename'),		/* Переименование файла */
-	sequence = require('gulp-sequence'),		/* Последовательное выполнение задач */
-	server = require('browser-sync'),			/* Локальный сервер, live-reload */
-	batch = require('gulp-batch'),				/* Патч для watch */
-	watch = require('gulp-watch'),				/* Следит за изменениями файлов */
+	sequence    = require('gulp-sequence'),		/* Последовательное выполнение задач */
+	server      = require('browser-sync'),		/* Локальный сервер, live-reload */
+	reload      = server.reload;
+	batch       = require('gulp-batch'),		/* Патч для watch */
+	watch       = require('gulp-watch'),		/* Следит за изменениями файлов */
 	
 	
 	/* HTML, CSS, JS */
@@ -36,14 +37,14 @@ var path = {
 			smerk:   '../source/vendors/smerk/'
         },
         src: {
-			all:    '../source/'			     ,
+			all:   '../source/'			              ,
+			page:  '../source/pages/'			          ,
 			less:  '../source/blocks/_service/style.less' ,
 			scss:  '../source/blocks/_service/style.scss' ,
-			script: '../source/common/script/'   ,
-            fonts:  '../source/assets/fonts/'		
+			other: '../source/assets/other/'
         },
         pub: {
-            html:   '../public/'		,
+            all:   '../public/'		,
 			style:  '../public/css/'	,
 			script: '../public/js/'	,
             img:	'../public/img/'	,
@@ -72,7 +73,12 @@ gulp.task('smerk-less', function(){
 
 /* Сборка разметки */
 gulp.task('page', function(){
-    ;
+    gulp.src(path.src.page + '*.pug')
+		.pipe(flatten())
+		.pipe(pug({
+			pretty: true
+		}))
+		.pipe(gulp.dest(path.pub.all));
 });
 
 /* Сборка стилей LESS */
@@ -154,30 +160,51 @@ gulp.task('fonts', function(){
 		.pipe(gulp.dest(path.pub.fonts));
 });
 
+/* Остальные активы */
+gulp.task('other', function(){
+    gulp.src(path.src.other + '**')
+		.pipe(gulp.dest(path.pub.all));
+});
+
 /* ============================= SERVICE TASKS ============================= */
 
 
 /* Наблюдение за изменениями */
 gulp.task('watcher', function() {
 	
+	watch(path.src.all + '**/*.pug', batch(function (events, done) {
+        gulp.start('page', done);
+		reload();
+    }));
+	
     watch(path.src.all + '**/*.less', batch(function (events, done) {
         gulp.start('style-less', done);
+		reload();
     }));
 	
 	watch(path.src.all + '**/*.js', batch(function (events, done) {
         gulp.start('script', done);
+		reload();
     }));
 
 	watch(path.src.all + '**/*.{png,jpg,gif}', batch(function (events, done) {
         gulp.start('img', done);
+		reload();
     }));
 	
 	watch(path.src.all + '**/presvg/*.svg', batch(function (events, done) {
         gulp.start('svg', done);
+		reload();
     }));
 	
 	watch(path.src.all + '**/fonts/*.{ttf,eot,svg,woff,woff2}', batch(function (events, done) {
-        gulp.start('fonts', done);
+        gulp.start('fonts', done)
+		reload();;
+    }));
+	
+	watch(path.src.other + '**', batch(function (events, done) {
+        gulp.start('other', done);
+		reload();
     }));
 	// Для проекта на SCSS
 	//watch(path.src.all + '**/*.scss', batch(function (events, done) {
@@ -205,7 +232,7 @@ gulp.task('clean', function() {
 });
 
 /* =========================== COLLECTOR PROJECT =========================== */
-gulp.task('prod', sequence('clean', ['page', 'style', 'js', 'img', 'svg', 'fonts']));
+gulp.task('prod', sequence('clean', ['page', 'style-less', 'script', 'img', 'svg', 'fonts', 'other']));
 gulp.task('dev', sequence('prod', 'server', 'watcher'));
 
 
