@@ -75,6 +75,7 @@ gulp.task('smerk-less', function(){
 gulp.task('page', function(){
     gulp.src(path.src.page + '*.pug')
 		.pipe(flatten())
+		.pipe(plumber())
 		.pipe(pug({
 			pretty: true
 		}))
@@ -167,7 +168,6 @@ gulp.task('other', function(){
 });
 
 /* ============================= SERVICE TASKS ============================= */
-
 
 /* Наблюдение за изменениями */
 gulp.task('watcher', function() {

@@ -1,12 +1,12 @@
 //CLEARFIX
-@mixin clearfix {
+.clearfix() {
     &::after {
         content: "";
         display: table;
         clear: both;
     }
 }
-@mixin clearfix-full {
+.clearfix-full() {
     &::after {
         content: "";
         display: table;
@@ -18,7 +18,7 @@
         clear: both;
     }
 }
-@mixin clearfix-before {
+.clearfix-before() {
     &::before {
         content: "";
         display: table;
