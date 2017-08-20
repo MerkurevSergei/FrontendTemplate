@@ -1,18 +1,26 @@
+//- SPECIAL
 include ../vendors/bemto/bemto.pug
+- set_bemto_settings({ modifier: '--' })
+
+//- BLOCKS
+
+//- MARKUP
 doctype html
 html(lang="ru")
-	head
-		meta(charset="UTF-8")
-		title Проект
-		link(rel="stylesheet" href="css/normalize.min.css")
-		link(rel="stylesheet" href="css/style.min.css")
-		meta(name="viewport" content="width=device-width, initial-scale=1")
-		meta(name="author" content="Merkurev S.N.")
-		//- meta name="keywords" content="Ваши, теги"
-		//- meta name="description" content="150 символов"
-		//- meta name="subject" content="Описание Вашего сайта / страницы"
-		//- meta name="copyright" content="Имя компании"
-		//- meta name="pagename" content="Название страницы"
-		//- meta http-equiv="Cache-Control" content="no-cache"
-	body Привет
-		+b.block_foo bar
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        //- meta(name="author"   content="Меркурьев С.Н.")
+        //- meta(name="copyright" content="Меркурьев Сергей")
+        //- meta(name="description" content="Портфолио разработчика")
+        //- meta(name="keywords" content="Портфолио, веб, разработка, программирование")
+        //- meta(name="subject" content="В портфолио я собираю свои различные проекты, как в области веб-разработки, так и вдругих областях, например: С++, радиомоделирование и пр.")
+        //- meta(name="pagename" content="Все проекты")
+        
+        link(rel="stylesheet" type="text/css" href="css/style.min.css")
+        //- link(rel="shortcut icon" type="image/x-icon" href="favicon.ico")
+        //- link(rel="icon"          type="image/x-icon" href="favicon.ico")
+        
+        title Заголовок
+    body
+        span Hello
