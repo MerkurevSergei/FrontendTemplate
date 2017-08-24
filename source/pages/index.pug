@@ -3,19 +3,26 @@ include ../vendors/bemto/bemto.pug
 - set_bemto_settings({ modifier: '--' })
 
 //- BLOCKS
+//- include ../blocks/example/example.pug
 
 //- MARKUP
 doctype html
 html(lang="ru")
     head
         meta(charset="UTF-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1")
+        //- meta(name="viewport" content="width=device-width, initial-scale=1")
         //- meta(name="author"   content="Меркурьев С.Н.")
         //- meta(name="copyright" content="Меркурьев Сергей")
         //- meta(name="description" content="Портфолио разработчика")
         //- meta(name="keywords" content="Портфолио, веб, разработка, программирование")
         //- meta(name="subject" content="В портфолио я собираю свои различные проекты, как в области веб-разработки, так и вдругих областях, например: С++, радиомоделирование и пр.")
         //- meta(name="pagename" content="Все проекты")
+        
+        //- SPECIAL APPLE AND MOBILE META
+        //- meta(name="apple-mobile-web-app-capable" content="yes")
+        //- meta(name="mobile-web-app-capable" content="yes")
+        //- meta(name="apple-touch-fullscreen" content="yes")
+        //- meta(name="apple-mobile-web-app-status-bar-style" content="black-translucent")
         
         link(rel="stylesheet" type="text/css" href="css/style.min.css")
         //- link(rel="shortcut icon" type="image/x-icon" href="favicon.ico")
@@ -24,3 +31,4 @@ html(lang="ru")
         title Заголовок
     body
         span Hello
+        script(src="js/app.min.js")

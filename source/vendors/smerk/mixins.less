@@ -37,25 +37,7 @@
     list-style-position: outside;
 }
 
-.cf() {
-    &:before,
-    &:after {
-        display: table;
-        content: "";
-    }
-
-    &:after {
-        clear: both;
-    }
-
-    .lt-ie8 & {
-        zoom: 1;
-    }
-}
-
 .blocks-justify() {
     text-align: justify;
     text-justify: newspaper;
 }
-
-// You can add your own mixins here:

@@ -32,48 +32,32 @@
 
 /* ============================== PATH ARRAY =============================== */
 var path = {
-		vendors: {
-			all:     '../source/vendors/' , 
-			smerk:   '../source/vendors/smerk/'
-        },
         src: {
-			all:   '../source/'			              ,
-			page:  '../source/pages/'			          ,
-			less:  '../source/blocks/_service/style.less' ,
-			scss:  '../source/blocks/_service/style.scss' ,
-			other: '../source/assets/other/'
+			all:    ['../source/']			                    ,
+			page:   ['../source/pages/*.pug']		            ,
+			less:   ['../source/blocks/_service/style.less']    ,
+			scss:   ['../source/blocks/_service/style.scss']    ,
+            js:     ['../source/blocks/**/*.js']                ,
+            img:    ['../source/static/img/**/*.{png,jpg,gif}'] ,
+            presvg: ['../source/static/img/presvg/*.svg']  ,
+            fonts:  ['../source/static/fonts/*.{ttf,eot,svg,woff,woff2}'] ,
+			other:  ['../source/static/other/']
         },
         pub: {
-            all:   '../public/'		,
-			style:  '../public/css/'	,
-			script: '../public/js/'	,
-            img:	'../public/img/'	,
+            all:   '../public/'		  ,
+			style:  '../public/css/'  ,
+			script: '../public/js/'	  ,
+            img:	'../public/img/'  ,
 			fonts:  '../public/fonts/'		
 			
         }
 };
 
-/* ============================== SMERK TASKS ============================== */
-/* Сборка smerk стилей */
-gulp.task('smerk-less', function(){
-	gulp.src(path.vendors.smerk + '_build/smerk.less')
-		.pipe(plumber())
-		.pipe(less())
-		.pipe(cssprefixer({
-			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
-			cascade: true
-		}))
-		.pipe(postcss([
-			mqpacker({sort: true})
-		]))
-		.pipe(gulp.dest(path.vendors.smerk + '_build'));
-});
-
 /* =========================== DEVELOPMENT TASKS =========================== */
 
 /* Сборка разметки */
 gulp.task('page', function(){
-    gulp.src(path.src.page + '*.pug')
+    gulp.src(path.src.page)
 		.pipe(flatten())
 		.pipe(plumber())
 		.pipe(pug({
@@ -124,7 +108,7 @@ gulp.task('style-scss', function(){
 /* Сборка javascript */
 gulp.task('script', function(cb){
 	pump([
-		gulp.src(path.src.all + 'blocks/**/*.js'),
+		gulp.src(path.src.js),
 		concat('app.js'),
 		gulp.dest(path.pub.script),
 		uglify(),
@@ -138,7 +122,8 @@ gulp.task('script', function(cb){
 
 /* Сборка и оптимизация SVG спрайта */
 gulp.task('svg', function(){
-    gulp.src(path.src.all + '**/presvg/*.svg')
+    gulp.src(path.src.presvg)
+        .pipe(plumber())
 		.pipe(svgmin())
 		.pipe(svgstore({
 			inlineSvg: true
@@ -150,7 +135,7 @@ gulp.task('svg', function(){
 
 /* Оптимизация изображений */
 gulp.task('img', function(){
-    gulp.src(path.src.all + '**/img/*.{png,jpg,gif}')
+    gulp.src(path.src.img)
 		.pipe(flatten())
 		.pipe(newer(path.pub.img))
 		.pipe(imagemin([
@@ -163,7 +148,7 @@ gulp.task('img', function(){
 
 /* Сборка шрифтов */
 gulp.task('fonts', function(){
-    gulp.src(path.src.all + '**/fonts/*.{ttf,eot,svg,woff,woff2}')
+    gulp.src(path.src.fonts)
 		.pipe(flatten())
 		.pipe(newer(path.pub.fonts))
 		.pipe(gulp.dest(path.pub.fonts))
@@ -211,11 +196,7 @@ gulp.task('watcher', function() {
 	// Для проекта на SCSS
 	//watch(path.src.all + '**/*.scss', batch(function (events, done) {
     //    gulp.start('style-scss', done);
-    //}));
-	//watch(path.src.all + '**/*.less', batch(function (events, done) {
-    //    gulp.start('smerk-less', done);
-    //}));
-	//gulp.watch(path.src.all + '**/*.*').on("change", reload());	
+    //}));	
 });
 
 /* Локальный сервер */
