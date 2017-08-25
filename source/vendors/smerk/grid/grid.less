@@ -1,5 +1,15 @@
+/**
+* Простейшая сетка проекта
+* 
+* @module grid
+*/
+
+// ================================= GRID ================================== //
 .grid {
 }
+
+// =============================== GRID ROW ================================ //
+/** @class row-external */
 .grid__row-external {
     padding-left: 10px;
     padding-right: 10px;
@@ -15,62 +25,27 @@
     }
 }
 
+/** @class row-inner */
 .grid__row-inner {
     width: 880px;
     margin: 0 auto;
-    @include clearfix;
+    .clearfix();
     
-    // HEADER
-    
-    // SUBHEADER
-    &--slider {
-        
-    }
-    &--welcome {
-        padding-bottom: 57px;
-        margin-bottom: 79px;
-    }
-    // CONTENT
-    &--ability {
-        padding: 80px 0; 
-    }
-    &--advantage {
-        padding: 70px 0;
-    }
-    &--partners {
-        padding: 45px 0;
-        padding-bottom: 20px;
-    }
-    
-    &--sorter {
-        margin-bottom: 20px;
-    }
-    &--partners {
-        margin-bottom: 85px;
-    }
-    &--projects {
-        margin-bottom: 80px;
-    }
-    &--paginator {
-//        margin-bottom: 80px;
-    }
-    
-    //  CONTACTS 
-    &--contacts {
-        position: relative;
-        width: 1199px;
-    }
-    //  FOOTER
+    // HEADER BLOCKS
+    // CONTENT BLOCKS
+    // FOOTER BLOCKS
 
 }
 
-// HEADER COLUMN
+// =========================== COLUMNS CLASSES ============================= //
+/** @class column-1-header */
 .grid__column-1-header {
     float: left;
     width: 140px;
     margin-top: 27px;
     box-sizing: border-box;
 }
+/** @class column-2-header */
 .grid__column-2-header {
     float: right;
     width: auto;
@@ -78,58 +53,13 @@
     box-sizing: border-box;
 }
 
-// SUBHEADER COLUMN
-.grid__column-1-subheader {
-    float: left;
-    width: 464px;
-    box-sizing: border-box;
-}
-.grid__column-2-subheader {
-    float: right;
-    width: auto;
-    padding-top: 10px;
-    padding-bottom: 0px;
-    box-sizing: border-box;
-    line-height: 0;
-    &--slide2 {
-        padding-right: 10px;
-    }
-    &--slide3 {
-        padding-top: 0px;
-        padding-right: 5px;
-    }
-}
-
-// ADVANTAGE COLUMN
-.grid__column-1-advantage {
-    float: left;
-    width: 580px;
-    box-sizing: border-box;
-}
-
-.grid__column-2-advantage {
-    float: right;
-    width: 240px;
-    box-sizing: border-box;
-}
-
-// CATALOG COLUMN
-.grid__column-1-catalog {
-    float: left;
-    width: 240px;
-    box-sizing: border-box;
-}
-.grid__column-2-catalog {
-    float: right;
-    width: 560px;
-    box-sizing: border-box;
-}
-// FOOTER COLUMN
+/** @class column-1-footer */
 .grid__column-1-footer {
     float: left;
     width: 300px;
     box-sizing: border-box;
 }
+/** @class column-2-footer */
 .grid__column-2-footer {
     float: right;
     width: 560px;
