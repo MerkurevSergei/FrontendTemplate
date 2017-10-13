@@ -30,13 +30,14 @@
 /* ============================== PATH ARRAY =============================== */
 var path = {
         src: {
-			all:    ['../source/']			                    ,
+			all:    '../source/'			                    ,
 			page:   ['../source/pages/*.pug']		            ,
 			less:   ['../source/blocks/_service/style.less']    ,
 			scss:   ['../source/blocks/_service/style.scss']    ,
             js:     ['../source/blocks/**/*.js']                ,
             img:    ['../source/static/img/**/*.{png,jpg,gif}'] ,
-            presvg: ['../source/static/img/presvg/*.svg']  ,
+            presvg: ['../source/static/img/presvg/*.svg']       ,
+            svg:    ['../source/static/img/*.svg']              ,
             fonts:  ['../source/static/fonts/*.{ttf,eot,svg,woff,woff2}'] ,
 			other:  ['../source/static/other/**/*.*']
         },
@@ -69,7 +70,7 @@ gulp.task('style-less', function(){
 		.pipe(plumber())
 		.pipe(less())
 		.pipe(cssprefixer({
-			browsers: ['last 5 versions', '> 1%', 'ie 8', 'ie 7'], 
+			browsers: ['last 5 versions', '> 1%', 'ie >= 11', 'Chrome >= 21', 'Firefox >= 28', 'Opera >= 12.1', 'Safari >= 6.1', 'iOS >= 7.1' ], 
 			cascade: true
 		}))
 		.pipe(postcss([
@@ -126,6 +127,10 @@ gulp.task('svg', function(){
 			inlineSvg: true
 		}))
 		.pipe(rename("sprite.svg"))
+		.pipe(gulp.dest(path.pub.img))
+        .on('end', reload);
+        
+    gulp.src(path.src.svg)
 		.pipe(gulp.dest(path.pub.img))
         .on('end', reload);
 });
