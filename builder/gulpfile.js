@@ -20,7 +20,8 @@
 	cssminify   = require('gulp-csso'),			/* Минификация CSS */
 	postcss		= require('gulp-postcss'),		/* PostCSS */		
 	mqpacker	= require('css-mqpacker'),		/* Упорядочивает медиавыражения */		
-	uglify       = require('gulp-uglify'),		/* Минификация JS */
+	uglify      = require('gulp-uglify'),		/* Минификация JS */
+    prettify    = require('gulp-prettify'),
 	
 	/* Изображения */
 	imagemin     = require('gulp-imagemin'),	/* Минификация изображений */
@@ -58,8 +59,11 @@ gulp.task('page', function(){
 		.pipe(flatten())
 		.pipe(plumber())
 		.pipe(pug({
-			pretty: true
 		}))
+        .pipe(prettify({
+            indent_size: 4,
+            preserve_newlines: true
+        }))
 		.pipe(gulp.dest(path.pub.all))
         .on('end', reload);
 });
