@@ -36,7 +36,7 @@ var path = {
 			less:   ['../source/blocks/_service/style.less']    ,
 			scss:   ['../source/blocks/_service/style.scss']    ,
             js:     ['../source/blocks/**/*.js']                ,
-            img:    ['../source/static/img/**/*.{png,jpg,gif}'] ,
+            img:    ['../source/static/img/*'] ,
             presvg: ['../source/static/img/presvg/*.svg']       ,
             svg:    ['../source/static/img/*.svg']              ,
             fonts:  ['../source/static/fonts/*.{ttf,eot,svg,woff,woff2}'] ,
